@@ -1,0 +1,15 @@
+# Cloudflare Pages _redirects
+# Format: source  destination  status_code
+
+# www to non-www (uncomment after adding custom domain)
+# https://www.ytthumb.download/* https://ytthumb.download/:splat 301
+
+# Old URL patterns → home
+/download  /  301
+/tool  /  301
+/thumbnail  /  301
+/youtube  /  301
+/yt  /  301
+
+# 404 fallback → home
+/*  /index.html  200
