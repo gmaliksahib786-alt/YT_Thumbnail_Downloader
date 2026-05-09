@@ -10,7 +10,8 @@
   <meta property="og:description" content="Download YouTube video thumbnails in all sizes. No login required." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖼️</text></svg>" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="shortcut icon" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -185,24 +186,6 @@
       color: #f08080;
       display: none;
     }
-
-    /* LOADING */
-    .loading-box {
-      text-align: center;
-      padding: 48px 24px;
-      display: none;
-    }
-    .spinner {
-      width: 28px;
-      height: 28px;
-      border: 2px solid var(--border2);
-      border-top-color: var(--red);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin: 0 auto 12px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-box p { font-size: 14px; color: var(--text2); }
 
     /* RESULTS */
     .results-wrap {
@@ -417,12 +400,196 @@
       color: var(--text3);
     }
 
+    /* ── SHIMMER SKELETON ─────────────────────────────────────── */
+    @keyframes shimmer {
+      0%   { background-position: -700px 0; }
+      100% { background-position:  700px 0; }
+    }
+    .skeleton {
+      background: var(--bg2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .skeleton-img {
+      aspect-ratio: 16/9;
+      background: linear-gradient(
+        90deg,
+        #1a1a1a 0px,
+        #252525 80px,
+        #2e2e2e 160px,
+        #252525 240px,
+        #1a1a1a 320px
+      );
+      background-size: 700px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+    }
+    .skeleton-footer {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .skeleton-text-wrap { display: flex; flex-direction: column; gap: 6px; }
+    .skeleton-line {
+      border-radius: 4px;
+      background: linear-gradient(
+        90deg,
+        #1a1a1a 0px,
+        #252525 80px,
+        #2e2e2e 160px,
+        #252525 240px,
+        #1a1a1a 320px
+      );
+      background-size: 700px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+    }
+    .skeleton-line.w80 { width: 80px; height: 13px; }
+    .skeleton-line.w50 { width: 50px; height: 11px; }
+    .skeleton-btn {
+      width: 90px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(
+        90deg,
+        #1a1a1a 0px,
+        #252525 80px,
+        #2e2e2e 160px,
+        #252525 240px,
+        #1a1a1a 320px
+      );
+      background-size: 700px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    /* ── SKELETON GRID (shown while loading) ──────────────────── */
+    .skeleton-grid {
+      max-width: 860px;
+      margin: 48px auto 0;
+      padding: 0 24px;
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    /* ── THUMB FOOTER BUTTONS ─────────────────────────────────── */
+    .thumb-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn-view {
+      height: 34px;
+      padding: 0 12px;
+      font-size: 13px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 0.5px solid var(--border2);
+      color: var(--text2);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-view:hover { background: var(--bg3); color: var(--text); }
+
+    /* ── LIGHTBOX ─────────────────────────────────────────────── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.92);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      animation: lbIn 0.18s ease;
+    }
+    @keyframes lbIn { from { opacity: 0; } to { opacity: 1; } }
+    .lightbox.open { display: flex; }
+    .lightbox-inner {
+      position: relative;
+      max-width: 900px;
+      width: 100%;
+      animation: lbScale 0.2s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes lbScale { from { transform: scale(0.93); } to { transform: scale(1); } }
+    .lightbox-inner img {
+      width: 100%;
+      border-radius: var(--radius);
+      display: block;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.8);
+    }
+    .lightbox-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 4px 0;
+    }
+    .lightbox-info { font-size: 13px; color: var(--text2); }
+    .lightbox-info strong { color: var(--text); font-weight: 500; margin-right: 8px; }
+    .lightbox-actions { display: flex; gap: 8px; }
+    .lb-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 0.5px solid var(--border2);
+      color: var(--text2);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: background 0.15s;
+    }
+    .lb-close:hover { background: var(--red); color: #fff; }
+
+    /* ── SWEEP on image while loading ────────────────────────── */
+    .thumb-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255,255,255,0.055) 50%,
+        transparent 70%
+      );
+      background-size: 200% 100%;
+      animation: sweep 1.6s ease-in-out infinite;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.4s;
+    }
+    .thumb-img-wrap.done::after { opacity: 0; }
+    @keyframes sweep {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── CARD ENTRANCE ANIMATION ──────────────────────────────── */
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .thumb-card { animation: cardIn 0.35s ease both; }
+
     /* MOBILE */
     @media (max-width: 540px) {
       .input-wrap { flex-direction: column; }
       .input-wrap input, .btn-primary { width: 100%; justify-content: center; }
       .steps { grid-template-columns: 1fr; }
       .stats { gap: 12px; }
+      .lb-close { top: -10px; right: -10px; }
     }
   </style>
 </head>
@@ -477,18 +644,40 @@
 <!-- ERROR -->
 <div class="error-box" id="errBox"></div>
 
-<!-- LOADING -->
-<div class="loading-box" id="loadBox">
-  <div class="spinner"></div>
-  <p>Fetching thumbnails...</p>
+<!-- SKELETON GRID (shown while loading) -->
+<div class="skeleton-grid" id="skeletonGrid">
+  <div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-footer"><div class="skeleton-text-wrap"><div class="skeleton-line w80"></div><div class="skeleton-line w50"></div></div><div class="skeleton-btn"></div></div></div>
+  <div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-footer"><div class="skeleton-text-wrap"><div class="skeleton-line w80"></div><div class="skeleton-line w50"></div></div><div class="skeleton-btn"></div></div></div>
+  <div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-footer"><div class="skeleton-text-wrap"><div class="skeleton-line w80"></div><div class="skeleton-line w50"></div></div><div class="skeleton-btn"></div></div></div>
+  <div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-footer"><div class="skeleton-text-wrap"><div class="skeleton-line w80"></div><div class="skeleton-line w50"></div></div><div class="skeleton-btn"></div></div></div>
 </div>
 
-<!-- PLACEHOLDER -->
+<!-- PLACEHOLDER (initial state) -->
 <div class="placeholder-grid" id="placeholders">
   <div class="placeholder-card"><p>Maxres</p><span>1280 × 720</span></div>
   <div class="placeholder-card"><p>HQ</p><span>480 × 360</span></div>
   <div class="placeholder-card"><p>MQ</p><span>320 × 180</span></div>
   <div class="placeholder-card"><p>SD</p><span>120 × 90</span></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-inner" id="lightboxInner">
+    <button class="lb-close" onclick="closeLightbox()">×</button>
+    <img id="lightboxImg" src="" alt="Thumbnail preview" />
+    <div class="lightbox-bar">
+      <div class="lightbox-info">
+        <strong id="lbLabel"></strong>
+        <span id="lbRes"></span>
+      </div>
+      <div class="lightbox-actions">
+        <button class="btn btn-primary btn-dl" id="lbDownloadBtn" onclick="">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- RESULTS -->
@@ -557,6 +746,13 @@
 </footer>
 
 <script>
+  // ─── CONFIG ─────────────────────────────────────────────────────────────────
+  // After deploying worker.js → paste your worker URL here:
+  // e.g. 'https://yt-thumb-proxy.YOUR-NAME.workers.dev'
+  // Leave empty to use direct download (may open in new tab on some browsers)
+  const PROXY_URL = '';
+  // ─────────────────────────────────────────────────────────────────────────────
+
   const SIZES = [
     { key: 'maxresdefault', label: 'Maxres', res: '1280 × 720', quality: 'Best quality', best: true },
     { key: 'hqdefault',     label: 'HQ',     res: '480 × 360',  quality: 'High quality',   best: false },
@@ -598,20 +794,21 @@
     const id = extractId(url);
     if (!id) { showError('Invalid YouTube URL. Example: https://youtube.com/watch?v=dQw4w9WgXcQ'); return; }
 
+    // Hide placeholder, show skeleton shimmer
     document.getElementById('placeholders').style.display = 'none';
     document.getElementById('resultsBox').style.display = 'none';
-    document.getElementById('loadBox').style.display = 'block';
+    document.getElementById('skeletonGrid').style.display = 'grid';
 
     currentThumbs = SIZES.map(s => ({
       ...s,
       url: `https://img.youtube.com/vi/${id}/${s.key}.jpg`,
-      filename: `thumbnail_${id}_${s.key}.jpg`,
+      filename: `yt-thumbnail-${id}-${s.key}.jpg`,
     }));
 
     const probe = new Image();
     probe.onload = () => { renderResults(id); };
     probe.onerror = () => {
-      document.getElementById('loadBox').style.display = 'none';
+      document.getElementById('skeletonGrid').style.display = 'none';
       document.getElementById('placeholders').style.display = 'grid';
       showError('Could not fetch thumbnails. Make sure the URL is a valid YouTube video link.');
     };
@@ -619,17 +816,18 @@
   }
 
   function renderResults(id) {
-    document.getElementById('loadBox').style.display = 'none';
+    document.getElementById('skeletonGrid').style.display = 'none';
     document.getElementById('videoTitle').textContent = '';
 
     const grid = document.getElementById('thumbGrid');
     grid.innerHTML = '';
 
-    currentThumbs.forEach(t => {
+    currentThumbs.forEach((t, idx) => {
       const card = document.createElement('div');
       card.className = 'thumb-card';
+      card.style.animationDelay = `${idx * 60}ms`;
       card.innerHTML = `
-        <div class="thumb-img-wrap">
+        <div class="thumb-img-wrap" id="imgwrap-${idx}">
           <img src="${t.url}" alt="${t.label} thumbnail" />
           <span class="size-badge">${t.label}</span>
           ${t.best ? '<span class="best-badge">BEST</span>' : ''}
@@ -639,21 +837,33 @@
             <p>${t.res}</p>
             <span>${t.quality}</span>
           </div>
-          <button class="btn btn-dl" onclick="downloadOne('${t.url}','${t.filename}')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download
-          </button>
+          <div class="thumb-actions">
+            <button class="btn-view" onclick="openLightbox(${idx})" title="Preview">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              View
+            </button>
+            <button class="btn btn-dl" id="dlbtn-${idx}" onclick="downloadOne('${t.url}','${t.filename}',${idx})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </button>
+          </div>
         </div>`;
 
       const img = card.querySelector('img');
-      img.onload = () => img.classList.add('loaded');
+      const wrap = card.querySelector('.thumb-img-wrap');
+
+      img.onload = () => {
+        img.classList.add('loaded');
+        wrap.classList.add('done'); // stop sweep shimmer
+      };
       img.onerror = () => {
-        card.querySelector('.thumb-img-wrap').style.background = '#1a1a1a';
+        wrap.classList.add('done');
+        wrap.style.background = '#111';
         img.style.display = 'none';
         const note = document.createElement('p');
-        note.style.cssText = 'font-size:12px;color:#555;padding:12px;text-align:center;';
-        note.textContent = 'Not available';
-        card.querySelector('.thumb-img-wrap').appendChild(note);
+        note.style.cssText = 'font-size:12px;color:#444;padding:20px;text-align:center;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;';
+        note.textContent = 'Not available for this video';
+        wrap.appendChild(note);
       };
 
       grid.appendChild(card);
@@ -663,20 +873,66 @@
     document.getElementById('resultsBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function downloadOne(url, name) {
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  // ── LIGHTBOX ────────────────────────────────────────────────
+  function openLightbox(idx) {
+    const t = currentThumbs[idx];
+    document.getElementById('lightboxImg').src = t.url;
+    document.getElementById('lbLabel').textContent = t.label;
+    document.getElementById('lbRes').textContent = t.res + ' · ' + t.quality;
+    const btn = document.getElementById('lbDownloadBtn');
+    btn.onclick = () => downloadOne(t.url, t.filename, idx);
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(e) {
+    if (e && document.getElementById('lightboxInner').contains(e.target)) return;
+    document.getElementById('lightbox').classList.remove('open');
+    document.getElementById('lightboxImg').src = '';
+    document.body.style.overflow = '';
+  }
+
+  // Close lightbox on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // ── DOWNLOAD ────────────────────────────────────────────────
+  async function downloadOne(imageUrl, filename, idx) {
+    const btn = idx !== undefined ? document.getElementById(`dlbtn-${idx}`) : null;
+    if (btn) { btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Saving...'; btn.disabled = true; }
+
+    try {
+      let fetchUrl = imageUrl;
+      if (PROXY_URL) {
+        fetchUrl = `${PROXY_URL}?url=${encodeURIComponent(imageUrl)}&filename=${encodeURIComponent(filename)}`;
+      }
+
+      const response = await fetch(fetchUrl);
+      if (!response.ok) throw new Error('Fetch failed');
+
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+
+      if (btn) { btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Done!'; btn.disabled = false; setTimeout(() => { btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download'; }, 2500); }
+
+    } catch (err) {
+      console.warn('Direct download failed, fallback to new tab:', err);
+      window.open(imageUrl, '_blank', 'noopener');
+      if (btn) { btn.innerHTML = 'Download'; btn.disabled = false; }
+    }
   }
 
   function downloadAll() {
     currentThumbs.forEach((t, i) => {
-      setTimeout(() => downloadOne(t.url, t.filename), i * 400);
+      setTimeout(() => downloadOne(t.url, t.filename, i), i * 700);
     });
   }
 
