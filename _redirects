@@ -1,8 +1,0 @@
-# Cloudflare Pages _redirects
-
-# Old URL patterns → home
-/download  /  301
-/tool  /  301
-/thumbnail  /  301
-/youtube  /  301
-/yt  /  301
